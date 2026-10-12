@@ -24,34 +24,48 @@ my $hdl2;
 
 my $server = tcp_server $local, $port, sub {
 	my ($fh, $host, $port) = @_;
-	$hdl1 = AnyEvent::Handle->new (fh => $fh, on_eof => sub { $cv->broadcast });
-	
 	warn "CLIENT $host CONNECTED TO SERVER";
+
+	$hdl1 = AnyEvent::Handle->new (fh => $fh, on_eof => sub { warn "EOF SERVER"; $cv->broadcast },
+		on_read => sub {
+			my ($handle) = @_;
+			my $data = $handle->rbuf;
+			my $encrypted = '';
+			warn "GETTED DATA FROM LOCAL $data";
+			$crypter->crypt(input => $data, output => \$encrypted);
+			warn "PUSH TO REMOTE: $encrypted";
+			$hdl2->push_write($encrypted) if $hdl2;
+
+			
+		}	
+	);
 	
-	$hdl1->push_read (chunk => 1 => sub {
-		my ($hdl, $data) = @_;
-		my $encrypted = '';
-		warn "GETTED DATA FROM LOCAL $data";
-		$crypter->crypt(input => $data, output => \$encrypted);
-		warn "PUSH TO REMOTE: $encrypted";
-		$hdl2->push_write($encrypted) if $hdl2;
-	});
+
 };
 
 my $connnect = tcp_connect $remote, $remoteport, sub {
 	my ($fh) = @_;
-	$hdl2 = AnyEvent::Handle->new (fh => $fh, on_eof => sub { $cv->broadcast });
-	
 	warn "CONNECT TO REMOTE SERVER";
+
+
+	$hdl2 = AnyEvent::Handle->new (
+		fh => $fh, 
+		on_eof => sub { warn "EOF CONNECTION"; $cv->broadcast },
+		on_read => sub {
+			my ($handle) = @_;
+			my $data = $handle->rbuf;
+			warn "GETTED DATA FROM REMOTE $data";
+			my $encrypted = '';
+			$crypter->crypt(input => $data, output => \$encrypted);
+			warn "PUSH TO LOCAL: $encrypted";
+			$hdl1->push_write($encrypted) if $hdl1;
+
+			
+		}
+	);
 	
-	$hdl2->push_read(chunk => 1 => sub {
-		my ($hdl, $data) = @_;
-		warn "GETTED DATA FROM REMOTE $data";
-		my $encrypted = '';
-		$crypter->crypt(input => $data, output => \$encrypted);
-		warn "PUSH TO LOCAL: $encrypted";
-		$hdl1->push_write($encrypted) if $hdl1;
-	});
+	
+
 };
 
 
