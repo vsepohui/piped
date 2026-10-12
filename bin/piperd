@@ -45,7 +45,7 @@ my $server = tcp_server $local, $port, sub {
 		my $encrypted = '';
 		$crypter->crypt(input => $data, output => \$encrypted);
 		warn "PUSH TO REMOTE: $encrypted";
-		$hdl2->push_write($encrypted);
+		$hdl2->push_write($encrypted) if $hdl2;
 	});
 };
 
