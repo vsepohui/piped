@@ -6,7 +6,7 @@ piped - secured tunnels for jammers!
 curl -L https://cpanmin.us | perl - https://github.com/vsepohui/piped.git
 ```
 
-# Example setup tunnels
+# Setup tunnels example
 
 On server (secured tunnel to proxy):
 
