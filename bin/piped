@@ -88,11 +88,11 @@ sub usage {
 
 =head1 NAME
 
-piper - secured tunnel for a jammers
+piped - secured tunnel for a jammers
 
 =head1 SYNOPSIS
 
-    Usage: piper [password] [local] [port] [remote] [remoreport]
+    Usage: piped [password] [local] [port] [remote] [remoreport]
     
     Options:
     
@@ -104,7 +104,7 @@ piper - secured tunnel for a jammers
 
 =head1 AUTHOR
 
-piper developed by Ivan Trunaev, Russia, 2026
+piped developed by Ivan Trunaev, Russia, 2026
 
 Contacts <ivan@trunaev.ru>
 

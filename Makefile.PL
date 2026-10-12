@@ -5,9 +5,9 @@ use warnings;
 use ExtUtils::MakeMaker;
 
 WriteMakefile(
-    NAME         => 'piperd',
+    NAME         => 'piped',
     AUTHOR       => q{Ivan Trunaev},
-    EXE_FILES 	 => [ './bin/piperd' ],
+    EXE_FILES 	 => [ './bin/piped' ],
     VERSION		 => '0.1',
 );
 
