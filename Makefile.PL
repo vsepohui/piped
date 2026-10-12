@@ -8,7 +8,8 @@ WriteMakefile(
     NAME         => 'piped',
     AUTHOR       => q{Ivan Trunaev},
     EXE_FILES 	 => [ './bin/piped' ],
-    VERSION		 => '0.1',
+    VERSION		 => '0.2',
+    PREREQ_PM	 => {'Crypter' => 0.5, 'AnyEvent' => '7.17'},
 );
 
 1;
