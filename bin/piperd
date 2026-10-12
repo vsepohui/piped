@@ -29,6 +29,7 @@ my $connnect = tcp_connect $remote, $remoteport, sub {
 		my ($hdl, $data) = @_;
 		my $encrypted = '';
 		$crypter->crypt(input => $data, output => \$encrypted);
+		warn "PUSH TO LOCAL: $encrypted";
 		$hdl1->push_write($encrypted) if $hdl1;
 	});
 };
@@ -43,6 +44,7 @@ my $server = tcp_server $local, $port, sub {
 		my ($hdl, $data) = @_;
 		my $encrypted = '';
 		$crypter->crypt(input => $data, output => \$encrypted);
+		warn "PUSH TO REMOTE: $encrypted";
 		$hdl2->push_write($encrypted);
 	});
 };
