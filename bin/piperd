@@ -22,6 +22,15 @@ my $crypter = new Crypter(password => $password);
 my $hdl1;
 my $hdl2;
 
+sub crypt {
+	my $data = shift;
+	return $data;
+	my $encrypted = '';
+	$crypter->crypt(input => $data, output => \$encrypted);	
+	
+	return $encrypted;
+}
+
 my $server = tcp_server $local, $port, sub {
 	my ($fh, $host, $port) = @_;
 	warn "CLIENT $host CONNECTED TO SERVER";
@@ -30,11 +39,8 @@ my $server = tcp_server $local, $port, sub {
 		on_read => sub {
 			my ($handle) = @_;
 			my $data = $handle->rbuf;
-			my $encrypted = '';
-			$crypter->crypt(input => $data, output => \$encrypted);
-			$hdl2->push_write($encrypted) if $hdl2;
-
-			
+			$data = crypt($data);
+			$hdl2->push_write($data) if $hdl2;
 		}	
 	);
 	
@@ -52,11 +58,8 @@ my $connnect = tcp_connect $remote, $remoteport, sub {
 		on_read => sub {
 			my ($handle) = @_;
 			my $data = $handle->rbuf;
-			my $encrypted = '';
-			$crypter->crypt(input => $data, output => \$encrypted);
-			$hdl1->push_write($encrypted) if $hdl1;
-
-			
+			$data = crypt($data);
+			$hdl1->push_write($data) if $hdl1;
 		}
 	);
 	
