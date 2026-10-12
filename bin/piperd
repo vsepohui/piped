@@ -29,7 +29,7 @@ my $connnect = tcp_connect $remote, $remoteport, sub {
 		my ($hdl, $data) = @_;
 		my $encrypted = '';
 		$crypter->crypt(input => $data, output => \$encrypted);
-		$hdl1->push_write($encrypted);
+		$hdl1->push_write($encrypted) if $hdl1;
 	});
 };
 
