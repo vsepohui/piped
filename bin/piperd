@@ -24,7 +24,6 @@ my $hdl2;
 
 sub crypt_data {
 	my $data = shift;
-	return $data;
 	my $encrypted = '';
 	$crypter->crypt(input => $data, output => \$encrypted);	
 	
