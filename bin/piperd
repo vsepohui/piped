@@ -31,9 +31,7 @@ my $server = tcp_server $local, $port, sub {
 			my ($handle) = @_;
 			my $data = $handle->rbuf;
 			my $encrypted = '';
-			warn "GETTED DATA FROM LOCAL $data";
 			$crypter->crypt(input => $data, output => \$encrypted);
-			warn "PUSH TO REMOTE: $encrypted";
 			$hdl2->push_write($encrypted) if $hdl2;
 
 			
@@ -54,10 +52,8 @@ my $connnect = tcp_connect $remote, $remoteport, sub {
 		on_read => sub {
 			my ($handle) = @_;
 			my $data = $handle->rbuf;
-			warn "GETTED DATA FROM REMOTE $data";
 			my $encrypted = '';
 			$crypter->crypt(input => $data, output => \$encrypted);
-			warn "PUSH TO LOCAL: $encrypted";
 			$hdl1->push_write($encrypted) if $hdl1;
 
 			
