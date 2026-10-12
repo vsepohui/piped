@@ -25,7 +25,7 @@ my $hdl2;
 my $connnect = tcp_connect $remote, $remoteport, sub {
 	my ($fh) = @_;
 	$hdl2 = AnyEvent::Handle->new (fh => $fh, on_eof => sub {});
-	$hdl2->push_read(chuck => 6, sub {
+	$hdl2->push_read(sub {
 		my ($hdl, $data) = @_;
 		my $encrypted = '';
 		$crypter->crypt(input => $data, output => \$encrypted);
@@ -39,7 +39,7 @@ my $server = tcp_server $local, $port, sub {
 	my ($fh, $host, $port) = @_;
 	$hdl1 = AnyEvent::Handle->new (fh => $fh, on_eof => sub {});
 	
-	$hdl1->push_read (chunk => 6, sub {
+	$hdl1->push_read (sub {
 		my ($hdl, $data) = @_;
 		my $encrypted = '';
 		$crypter->crypt(input => $data, output => \$encrypted);
