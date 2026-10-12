@@ -8,7 +8,7 @@ curl -L https://cpanmin.us | perl - https://github.com/vsepohui/piped.git
 
 # Using piper
 
-Piper open crypted proxy-tunner from local:post -> remote:remoteport
+Piped open crypted proxy-tunner from local:post -> remote:remoteport
 
 ```
 piped [password] [local] [port] [remote] [remoreport]
