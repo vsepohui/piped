@@ -18,3 +18,9 @@ On client (secured tunnel to server secured port):
 ```
 piped password1apr 127.0.0.1 3128 server.org 9999
 ```
+
+# Credits
+
+piped developed by Ivan Trunaev, 2026.
+
+Based on Crypter library.
