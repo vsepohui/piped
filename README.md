@@ -1,1 +1,3 @@
-piper - future for a banned!
+piped - secured tunnels for jammers!
+
+# Getting piped
