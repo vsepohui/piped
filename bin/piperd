@@ -5,6 +5,7 @@ use warnings;
 
 use AnyEvent;
 use AnyEvent::Socket;
+use AnyEvent::Handle;
 use Crypter;
 
 use Pod::Usage qw(pod2usage);
