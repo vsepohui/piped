@@ -1,0 +1,87 @@
+#!/usr/bin/perl
+
+use 5.022;
+use warnings;
+
+use AnyEvent;
+use AnyEvent::Socket;
+use Crypter;
+
+use Pod::Usage qw(pod2usage);
+
+$| = 1;
+
+usage() if scalar @ARGV != 5;
+my ($password, $local, $port, $remote, $remoteport) = @ARGV;
+
+my $cv = AE::cv;
+
+my $crypter = new Crypter(password => $password);
+
+my $hdl1;
+my $hdl2;
+
+my $connnect = tcp_connect $remote, $remoteport, sub {
+	my ($fh) = @_;
+	$hdl2 = AnyEvent::Handle->new (fh => $fh, on_eof => sub {});
+	$hdl2->push_read(chuck => 6, sub {
+		my ($hdl, $data) = @_;
+		my $encrypted = '';
+		$crypter->crypt(input => $data, output => \$encrypted);
+		$hdl1->push_write($encrypted);
+	});
+};
+
+
+
+my $server = tcp_server $local, $port, sub {
+	my ($fh, $host, $port) = @_;
+	$hdl1 = AnyEvent::Handle->new (fh => $fh, on_eof => sub {});
+	
+	$hdl1->push_read (chunk => 6, sub {
+		my ($hdl, $data) = @_;
+		my $encrypted = '';
+		$crypter->crypt(input => $data, output => \$encrypted);
+		$hdl2->push_write($encrypted);
+	});
+};
+
+$cv->recv;
+
+sub usage {
+	my $file = @_ ? "$_[0]" : (caller)[1];
+	open my $handle, '>', \my $output;
+	pod2usage -exitval => 'noexit', -input => $file, -output => $handle;
+	$output =~ s/^.*\n|\n$//;
+	$output =~ s/\n$//g;
+	say $output;
+	exit;
+}
+
+1;
+
+=encoding utf8
+
+=head1 NAME
+
+piper - secured tunnel for a jammers
+
+=head1 SYNOPSIS
+
+    Usage: piper [password] [local] [port] [remote] [remoreport]
+    
+    Options:
+    
+        password      Password for Crypter
+        local         Bind address
+        port          Bind port
+        remote        Remote server
+        remoteport    Remote port
+
+=head1 AUTHOR
+
+piper developed by Ivan Trunaev, Russia, 2026
+
+Contacts <ivan@trunaev.ru>
+
+=cut
