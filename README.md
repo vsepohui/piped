@@ -6,6 +6,14 @@ piped - secured tunnels for jammers!
 curl -L https://cpanmin.us | perl - https://github.com/vsepohui/piped.git
 ```
 
+# Using piper
+
+Piper open crypted proxy-tunner from local:post -> remote:remoteport
+
+```
+piped [password] [local] [port] [remote] [remoreport]
+```
+
 # Setup tunnels example
 
 On server (secured tunnel to local proxy):
