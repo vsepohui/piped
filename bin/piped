@@ -45,9 +45,7 @@ my $server = tcp_server $local, $port, sub {
 			eval {
 				$hdl2->push_write($data);
 			};
-			if ($@) {
-				warn "ERROR $@";
-			}
+			warn $@ if $@;
 		}	
 	);
 
@@ -61,7 +59,10 @@ my $server = tcp_server $local, $port, sub {
 				my ($handle) = @_;
 				my $data = $handle->rbuf;
 				$data = crypt_data($data);
-				$hdl1->push_write($data) if $hdl1;
+				eval {
+					$hdl1->push_write($data);
+				};
+				warn $@ if $@;
 			}
 		);
 	};
