@@ -32,13 +32,11 @@ sub crypt_data {
 
 my $server = tcp_server $local, $port, sub {
 	my ($fh, $host, $port) = @_;
-	warn "CLIENT $host CONNECTED TO SERVER";
 
 	$hdl1 = AnyEvent::Handle->new (fh => $fh, on_eof => sub { warn "EOF SERVER"; $cv->broadcast },
 		on_read => sub {
 			my ($handle) = @_;
 			my $data = $handle->rbuf;
-			warn "GETTED FROM CLIENT $data";
 			$data = crypt_data($data);
 			$hdl2->push_write($data) if $hdl2;
 		}	
@@ -49,8 +47,6 @@ my $server = tcp_server $local, $port, sub {
 
 my $connnect = tcp_connect $remote, $remoteport, sub {
 	my ($fh) = @_;
-	warn "CONNECT TO REMOTE SERVER";
-
 
 	$hdl2 = AnyEvent::Handle->new (
 		fh => $fh, 
@@ -59,7 +55,6 @@ my $connnect = tcp_connect $remote, $remoteport, sub {
 			my ($handle) = @_;
 			my $data = $handle->rbuf;
 			$data = crypt_data($data);
-			warn "GETTED FROM SERVER $data";
 			$hdl1->push_write($data) if $hdl1;
 		}
 	);
