@@ -31,8 +31,6 @@ my @connections;
 my $server = tcp_server $local, $port, sub {
 	my ($fh, $host, $port) = @_;
 	
-	#warn "CLIENT $host CONNECTED TO SERVER";
-
 	my $hdl1;
 	my $hdl2;
 	
@@ -41,19 +39,14 @@ my $server = tcp_server $local, $port, sub {
 			my ($handle) = @_;
 			my $data = $handle->rbuf;
 			
-			#warn "RECIVED DATA FROM CLIEN $host $data";
-			
+		
 			$data = crypt_data($data);
-			
-			
 
 			eval {
 				$hdl2->push_write($data);
 			};
 			if ($@) {
 				warn "ERROR $@";
-			} else {
-	#			warn "SENDING DATA TO REMOTE $data";
 			}
 		}	
 	);
@@ -61,28 +54,21 @@ my $server = tcp_server $local, $port, sub {
 	tcp_connect $remote, $remoteport, sub {
 		my ($fh) = @_;
 		
-	#	warn "CONNECTED TO REMOTE $remote:$remoteport";
-
 		$hdl2 = AnyEvent::Handle->new (
 			fh => $fh, 
 			on_eof => sub {},
 			on_read => sub {
 				my ($handle) = @_;
 				my $data = $handle->rbuf;
-	#			warn "RECIVED DATA FROM REMOTE $data";
 				$data = crypt_data($data);
 				$hdl1->push_write($data) if $hdl1;
 			}
 		);
-		
-	};			
-
-
+	};
 };
 
+$cv->recv;
 
-
-$cv->wait;
 
 sub usage {
 	my $file = @_ ? "$_[0]" : (caller)[1];
