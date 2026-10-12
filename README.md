@@ -8,7 +8,7 @@ curl -L https://cpanmin.us | perl - https://github.com/vsepohui/piped.git
 
 # Setup tunnels example
 
-On server (secured tunnel to proxy):
+On server (secured tunnel to local proxy):
 
 ```
 piped password1apt 0.0.0.0 9999 127.0.0.1 3128
