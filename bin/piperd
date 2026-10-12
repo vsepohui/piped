@@ -27,6 +27,7 @@ my $connnect = tcp_connect $remote, $remoteport, sub {
 	$hdl2 = AnyEvent::Handle->new (fh => $fh, on_eof => sub { $cv->broadcast });
 	$hdl2->push_read(chunk => 6 => sub {
 		my ($hdl, $data) = @_;
+		warn "GETTED DATA FROM REMOTE $data";
 		my $encrypted = '';
 		$crypter->crypt(input => $data, output => \$encrypted);
 		warn "PUSH TO LOCAL: $encrypted";
@@ -43,7 +44,7 @@ my $server = tcp_server $local, $port, sub {
 	$hdl1->push_read (chunk => 6 => sub {
 		my ($hdl, $data) = @_;
 		my $encrypted = '';
-		warn "GETTED DATA $data";
+		warn "GETTED DATA FROM LOCAL $data";
 		$crypter->crypt(input => $data, output => \$encrypted);
 		warn "PUSH TO REMOTE: $encrypted";
 		$hdl2->push_write($encrypted) if $hdl2;
