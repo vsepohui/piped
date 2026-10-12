@@ -22,7 +22,7 @@ my $crypter = new Crypter(password => $password);
 my $hdl1;
 my $hdl2;
 
-sub crypt {
+sub crypt_data {
 	my $data = shift;
 	return $data;
 	my $encrypted = '';
@@ -39,7 +39,7 @@ my $server = tcp_server $local, $port, sub {
 		on_read => sub {
 			my ($handle) = @_;
 			my $data = $handle->rbuf;
-			$data = crypt($data);
+			$data = crypt_data($data);
 			$hdl2->push_write($data) if $hdl2;
 		}	
 	);
@@ -58,7 +58,7 @@ my $connnect = tcp_connect $remote, $remoteport, sub {
 		on_read => sub {
 			my ($handle) = @_;
 			my $data = $handle->rbuf;
-			$data = crypt($data);
+			$data = crypt_data($data);
 			$hdl1->push_write($data) if $hdl1;
 		}
 	);
