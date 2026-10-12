@@ -39,6 +39,7 @@ my $server = tcp_server $local, $port, sub {
 		on_read => sub {
 			my ($handle) = @_;
 			my $data = $handle->rbuf;
+			warn "GETTED FROM CLIENT $data";
 			$data = crypt_data($data);
 			$hdl2->push_write($data) if $hdl2;
 		}	
@@ -59,6 +60,7 @@ my $connnect = tcp_connect $remote, $remoteport, sub {
 			my ($handle) = @_;
 			my $data = $handle->rbuf;
 			$data = crypt_data($data);
+			warn "GETTED FROM SERVER $data";
 			$hdl1->push_write($data) if $hdl1;
 		}
 	);
